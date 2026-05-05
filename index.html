@@ -5,59 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CONSOLA CONSTRUCTORA - SSV</title>
     <style>
-        body { 
-            background-color: #121212; color: #e0e0e0; 
-            font-family: 'Segoe UI', sans-serif; padding: 20px;
-        }
-        h1 { color: #ffd700; text-align: center; font-size: 1.5rem; }
-        .bloque { 
-            background: #1e1e1e; padding: 15px; 
-            border-radius: 10px; margin-bottom: 20px;
-            border-left: 4px solid #ffd700;
-        }
-        label { display: block; margin-top: 10px; font-weight: bold; color: #ffd700; }
-        input, select, textarea { 
-            width: 100%; padding: 10px; margin-top: 5px;
-            background: #2a2a2a; border: 1px solid #444; 
-            color: white; border-radius: 5px; box-sizing: border-box;
-        }
-        .btn-generar { 
-            background: #ffd700; color: black; border: none; 
-            padding: 15px; width: 100%; font-weight: bold; 
-            border-radius: 5px; cursor: pointer; font-size: 1.1rem;
-        }
-        pre { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        body { background-color: #0c0c0c; color: #e0e0e0; font-family: sans-serif; padding: 15px; }
+        h1 { color: #ffd700; text-align: center; font-size: 1.4rem; text-transform: uppercase; }
+        .bloque { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #ffd700; }
+        label { display: block; margin-top: 8px; font-weight: bold; color: #ffd700; font-size: 0.85rem; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; }
+        .btn-generar { background: #ffd700; color: black; border: none; padding: 18px; width: 100%; font-weight: bold; border-radius: 5px; margin-top: 10px; font-size: 1rem; cursor: pointer; }
+        pre { background: #000; padding: 15px; border: 1px solid #ffd700; font-size: 0.8rem; overflow-x: auto; color: #00ff88; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <h1>🚀 Consola Constructora</h1>
+    <h1>🚀 Consola de Fabricación</h1>
 
     <div class="bloque">
-        <label>Identidad Visual</label>
+        <label>Identidad Visual y Contenido</label>
         <input type="text" id="nombre" placeholder="Nombre de la Marca">
-        <input type="color" id="color" value="#ffd700">
-        <input type="text" id="logo" placeholder="URL del Logo">
+        <input type="color" id="color" value="#ffd700" style="height: 40px;">
+        <input type="text" id="logo" placeholder="URL del Logo (1x1)">
+        <input type="text" id="banner" placeholder="URL del Banner (Horizontal)">
+        <textarea id="bio" maxlength="400" placeholder="Descripción: Horarios y días de atención (Máx 200 car.)" rows="3"></textarea>
     </div>
 
     <div class="bloque">
-        <label>Estrategia y Logística</label>
-        <input type="number" id="tanque" placeholder="Tanque de Tiempo (Minutos)">
+        <label>Estrategia y Acceso Oculto</label>
+        <input type="number" id="tanque" placeholder="Tanque de Tiempo Diario (Minutos)">
+        <input type="text" id="idSala" placeholder="ID de la Sala (Jitsi)">
         <input type="text" id="pin" placeholder="PIN de Seguridad (4 dígitos)">
         <input type="text" id="wa_dueno" placeholder="WhatsApp Dueño (54...)">
         <input type="text" id="wa_colab" placeholder="WhatsApp Colaborador (54...)">
     </div>
 
     <div class="bloque">
-        <label>Tramos de Pago (Link Mercado Pago)</label>
-        <input type="text" id="t1" placeholder="Link Tramo 15 min">
-        <input type="text" id="t2" placeholder="Link Tramo 30 min">
+        <label>Pagos Nacionales (Mercado Pago)</label>
+        <input type="text" id="t1" placeholder="Link 15 min">
+        <input type="text" id="t2" placeholder="Link 30 min">
+        <input type="text" id="t3" placeholder="Link 60 min">
     </div>
 
-    <button class="btn-generar" onclick="generarJSON()">GENERAR ADN (JSON)</button>
+    <div class="bloque">
+        <label>Pagos Internacionales (Opcional)</label>
+        <input type="text" id="paypal" placeholder="Link PayPal.me">
+        <input type="text" id="gpay" placeholder="Link Google Pay">
+        <input type="text" id="stripe" placeholder="Link Stripe">
+    </div>
+
+    <button class="btn-generar" onclick="generarJSON()">GENERAR ADN PARA GITHUB</button>
 
     <div id="resultado" style="display:none; margin-top: 20px;">
-        <label>Copia este código para tu config.json:</label>
+        <label style="color: #00ff88;">✓ ADN Generado. Copiá esto en config.json:</label>
         <pre id="codigo-json"></pre>
     </div>
 
@@ -67,21 +63,29 @@
                 nombreMarca: document.getElementById('nombre').value,
                 colorMarca: document.getElementById('color').value,
                 logoUrl: document.getElementById('logo').value,
-                tanqueMinutos: parseInt(document.getElementById('tanque').value),
+                bannerUrl: document.getElementById('banner').value,
+                bioTexto: document.getElementById('bio').value,
+                tanqueMinutos: parseInt(document.getElementById('tanque').value) || 0,
+                idSala: document.getElementById('idSala').value,
                 pinSeguridad: document.getElementById('pin').value,
                 whatsappDueno: document.getElementById('wa_dueno').value,
                 whatsappColaborador: document.getElementById('wa_colab').value,
                 tramos: [
                     { min: 15, link: document.getElementById('t1').value },
-                    { min: 30, link: document.getElementById('t2').value }
-                ]
+                    { min: 30, link: document.getElementById('t2').value },
+                    { min: 60, link: document.getElementById('t3').value }
+                ],
+                pagosExtra: {
+                    paypal: document.getElementById('paypal').value,
+                    gpay: document.getElementById('gpay').value,
+                    stripe: document.getElementById('stripe').value
+                }
             };
-
             document.getElementById('codigo-json').innerText = JSON.stringify(config, null, 2);
             document.getElementById('resultado').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
         }
     </script>
-
 </body>
-          </html>
-
+    </html>
+    
