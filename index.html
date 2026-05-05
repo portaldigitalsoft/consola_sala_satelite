@@ -11,12 +11,25 @@
         label { display: block; margin-top: 8px; font-weight: bold; color: #ffd700; font-size: 0.85rem; }
         input, textarea { width: 100%; padding: 10px; margin-top: 5px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; }
         .btn-generar { background: #ffd700; color: black; border: none; padding: 18px; width: 100%; font-weight: bold; border-radius: 5px; margin-top: 10px; font-size: 1rem; cursor: pointer; }
+        .btn-cargar { background: #333; color: #ffd700; border: 1px solid #ffd700; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-bottom: 10px; font-size: 0.8rem; }
+        .btn-plus { background: #238636; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .tramo-card { background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; position: relative; }
+        .btn-eliminar { color: #ff4d4d; background: none; border: none; font-size: 0.7rem; cursor: pointer; float: right; }
         pre { background: #000; padding: 15px; border: 1px solid #ffd700; font-size: 0.8rem; overflow-x: auto; color: #00ff88; border-radius: 5px; }
+        input[type="file"] { display: none; }
+        .row { display: flex; gap: 5px; margin-bottom: 5px; }
+        .row input { flex: 1; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <h1>🚀 Consola de Fabricación</h1>
+    <h1>🚀 Consola de Fabricación V2.2</h1>
+
+    <div class="bloque">
+        <label>Cargar configuración existente</label>
+        <button class="btn-cargar" onclick="document.getElementById('file-input').click()">📂 SELECCIONAR CONFIG.JSON</button>
+        <input type="file" id="file-input" accept=".json" onchange="cargarJSON(event)">
+    </div>
 
     <div class="bloque">
         <label>Identidad Visual y Contenido</label>
@@ -24,7 +37,7 @@
         <input type="color" id="color" value="#ffd700" style="height: 40px;">
         <input type="text" id="logo" placeholder="URL del Logo (1x1)">
         <input type="text" id="banner" placeholder="URL del Banner (Horizontal)">
-        <textarea id="bio" maxlength="400" placeholder="Descripción: Horarios y días de atención (Máx 200 car.)" rows="3"></textarea>
+        <textarea id="bio" maxlength="400" placeholder="Horarios y descripción (Máx 400 car.)" rows="3"></textarea>
     </div>
 
     <div class="bloque">
@@ -32,22 +45,14 @@
         <input type="number" id="tanque" placeholder="Tanque de Tiempo Diario (Minutos)">
         <input type="text" id="idSala" placeholder="ID de la Sala (Jitsi)">
         <input type="text" id="pin" placeholder="PIN de Seguridad (4 dígitos)">
-        <input type="text" id="wa_dueno" placeholder="WhatsApp Dueño (54...)">
-        <input type="text" id="wa_colab" placeholder="WhatsApp Colaborador (54...)">
+        <input type="text" id="wa_dueno" placeholder="WhatsApp Dueño">
+        <input type="text" id="wa_colab" placeholder="WhatsApp Colaborador">
     </div>
 
     <div class="bloque">
-        <label>Pagos Nacionales (Mercado Pago)</label>
-        <input type="text" id="t1" placeholder="Link 15 min">
-        <input type="text" id="t2" placeholder="Link 30 min">
-        <input type="text" id="t3" placeholder="Link 60 min">
-    </div>
-
-    <div class="bloque">
-        <label>Pagos Internacionales (Opcional)</label>
-        <input type="text" id="paypal" placeholder="Link PayPal.me">
-        <input type="text" id="gpay" placeholder="Link Google Pay">
-        <input type="text" id="stripe" placeholder="Link Stripe">
+        <label>Configuración de Tramos y Pasarelas</label>
+        <div id="contenedor-tramos"></div>
+        <button type="button" class="btn-plus" onclick="agregarTramo()">➕ AGREGAR TRAMO (PRODUCTO)</button>
     </div>
 
     <button class="btn-generar" onclick="generarJSON()">GENERAR ADN PARA GITHUB</button>
@@ -58,7 +63,45 @@
     </div>
 
     <script>
+        function agregarTramo(datos = {}) {
+            const contenedor = document.getElementById('contenedor-tramos');
+            const div = document.createElement('div');
+            div.className = 'tramo-card';
+            
+            const min = datos.min || '';
+            const precio = datos.precio || '';
+            const mp = datos.mp || '';
+            const gpay = datos.gpay || datos.gp || '';
+            const paypal = datos.paypal || datos.pp || '';
+            const stripe = datos.stripe || datos.st || '';
+
+            div.innerHTML = `
+                <button class="btn-eliminar" onclick="this.parentElement.remove()">[x] ELIMINAR</button>
+                <div class="row">
+                    <input type="number" class="t-min" placeholder="Minutos" value="${min}">
+                    <input type="text" class="t-precio" placeholder="Precio $" value="${precio}">
+                </div>
+                <input type="text" class="t-mp" placeholder="Link Mercado Pago" value="${mp}">
+                <div class="row">
+                    <input type="text" class="t-gp" placeholder="GPay" value="${gpay}">
+                    <input type="text" class="t-pp" placeholder="PayPal" value="${paypal}">
+                    <input type="text" class="t-st" placeholder="Stripe" value="${stripe}">
+                </div>
+            `;
+            contenedor.appendChild(div);
+        }
+
         function generarJSON() {
+            const tramosDOM = document.querySelectorAll('.tramo-card');
+            const tramosData = Array.from(tramosDOM).map(t => ({
+                min: t.querySelector('.t-min').value,
+                precio: t.querySelector('.t-precio').value,
+                mp: t.querySelector('.t-mp').value,
+                gpay: t.querySelector('.t-gp').value,
+                paypal: t.querySelector('.t-pp').value,
+                stripe: t.querySelector('.t-st').value
+            }));
+
             const config = {
                 nombreMarca: document.getElementById('nombre').value,
                 colorMarca: document.getElementById('color').value,
@@ -70,22 +113,42 @@
                 pinSeguridad: document.getElementById('pin').value,
                 whatsappDueno: document.getElementById('wa_dueno').value,
                 whatsappColaborador: document.getElementById('wa_colab').value,
-                tramos: [
-                    { min: 15, link: document.getElementById('t1').value },
-                    { min: 30, link: document.getElementById('t2').value },
-                    { min: 60, link: document.getElementById('t3').value }
-                ],
-                pagosExtra: {
-                    paypal: document.getElementById('paypal').value,
-                    gpay: document.getElementById('gpay').value,
-                    stripe: document.getElementById('stripe').value
-                }
+                tramos: tramosData
             };
             document.getElementById('codigo-json').innerText = JSON.stringify(config, null, 2);
             document.getElementById('resultado').style.display = 'block';
             window.scrollTo(0, document.body.scrollHeight);
         }
+
+        function cargarJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const config = JSON.parse(e.target.result);
+                    document.getElementById('nombre').value = config.nombreMarca || '';
+                    document.getElementById('color').value = config.colorMarca || '#ffd700';
+                    document.getElementById('logo').value = config.logoUrl || '';
+                    document.getElementById('banner').value = config.bannerUrl || '';
+                    document.getElementById('bio').value = config.bioTexto || '';
+                    document.getElementById('tanque').value = config.tanqueMinutos || 0;
+                    document.getElementById('idSala').value = config.idSala || '';
+                    document.getElementById('pin').value = config.pinSeguridad || '';
+                    document.getElementById('wa_dueno').value = config.whatsappDueno || '';
+                    document.getElementById('wa_colab').value = config.whatsappColaborador || '';
+                    
+                    document.getElementById('contenedor-tramos').innerHTML = '';
+                    if (config.tramos && Array.isArray(config.tramos)) {
+                        config.tramos.forEach(t => agregarTramo(t));
+                    }
+                    alert("✓ ADN Cargado con éxito");
+                } catch (err) {
+                    alert("Error al leer el archivo JSON");
+                }
+            };
+            reader.readAsText(file);
+        }
     </script>
 </body>
-    </html>
-    
+</html>
