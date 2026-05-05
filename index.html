@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONSOLA CONSTRUCTORA - SSV</title>
+    <style>
+        body { 
+            background-color: #121212; color: #e0e0e0; 
+            font-family: 'Segoe UI', sans-serif; padding: 20px;
+        }
+        h1 { color: #ffd700; text-align: center; font-size: 1.5rem; }
+        .bloque { 
+            background: #1e1e1e; padding: 15px; 
+            border-radius: 10px; margin-bottom: 20px;
+            border-left: 4px solid #ffd700;
+        }
+        label { display: block; margin-top: 10px; font-weight: bold; color: #ffd700; }
+        input, select, textarea { 
+            width: 100%; padding: 10px; margin-top: 5px;
+            background: #2a2a2a; border: 1px solid #444; 
+            color: white; border-radius: 5px; box-sizing: border-box;
+        }
+        .btn-generar { 
+            background: #ffd700; color: black; border: none; 
+            padding: 15px; width: 100%; font-weight: bold; 
+            border-radius: 5px; cursor: pointer; font-size: 1.1rem;
+        }
+        pre { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Consola Constructora</h1>
+
+    <div class="bloque">
+        <label>Identidad Visual</label>
+        <input type="text" id="nombre" placeholder="Nombre de la Marca">
+        <input type="color" id="color" value="#ffd700">
+        <input type="text" id="logo" placeholder="URL del Logo">
+    </div>
+
+    <div class="bloque">
+        <label>Estrategia y Logística</label>
+        <input type="number" id="tanque" placeholder="Tanque de Tiempo (Minutos)">
+        <input type="text" id="pin" placeholder="PIN de Seguridad (4 dígitos)">
+        <input type="text" id="wa_dueno" placeholder="WhatsApp Dueño (54...)">
+        <input type="text" id="wa_colab" placeholder="WhatsApp Colaborador (54...)">
+    </div>
+
+    <div class="bloque">
+        <label>Tramos de Pago (Link Mercado Pago)</label>
+        <input type="text" id="t1" placeholder="Link Tramo 15 min">
+        <input type="text" id="t2" placeholder="Link Tramo 30 min">
+    </div>
+
+    <button class="btn-generar" onclick="generarJSON()">GENERAR ADN (JSON)</button>
+
+    <div id="resultado" style="display:none; margin-top: 20px;">
+        <label>Copia este código para tu config.json:</label>
+        <pre id="codigo-json"></pre>
+    </div>
+
+    <script>
+        function generarJSON() {
+            const config = {
+                nombreMarca: document.getElementById('nombre').value,
+                colorMarca: document.getElementById('color').value,
+                logoUrl: document.getElementById('logo').value,
+                tanqueMinutos: parseInt(document.getElementById('tanque').value),
+                pinSeguridad: document.getElementById('pin').value,
+                whatsappDueno: document.getElementById('wa_dueno').value,
+                whatsappColaborador: document.getElementById('wa_colab').value,
+                tramos: [
+                    { min: 15, link: document.getElementById('t1').value },
+                    { min: 30, link: document.getElementById('t2').value }
+                ]
+            };
+
+            document.getElementById('codigo-json').innerText = JSON.stringify(config, null, 2);
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+
+</body>
+          </html>
+
