@@ -3,152 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONSOLA CONSTRUCTORA - SSV</title>
+    <title>CONSOLA V3.1 - FULL ESCALABLE</title>
     <style>
-        body { background-color: #0c0c0c; color: #e0e0e0; font-family: sans-serif; padding: 15px; }
-        h1 { color: #ffd700; text-align: center; font-size: 1.4rem; text-transform: uppercase; }
-        .bloque { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #ffd700; }
-        label { display: block; margin-top: 8px; font-weight: bold; color: #ffd700; font-size: 0.85rem; }
-        input, textarea { width: 100%; padding: 10px; margin-top: 5px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; }
-        .btn-generar { background: #ffd700; color: black; border: none; padding: 18px; width: 100%; font-weight: bold; border-radius: 5px; margin-top: 10px; font-size: 1rem; cursor: pointer; }
-        .btn-cargar { background: #333; color: #ffd700; border: 1px solid #ffd700; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-bottom: 10px; font-size: 0.8rem; }
-        .btn-plus { background: #238636; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        /* Mantenemos tu estilo original que es muy limpio */
+        body { background-color: #0c0c0c; color: #e0e0e0; font-family: sans-serif; padding: 15px; margin: 0; }
+        h1 { color: #ffd700; text-align: center; font-size: 1.2rem; text-transform: uppercase; border-bottom: 2px solid #ffd700; padding: 15px 0; margin: 0; }
+        .bloque { background: #1a1a1a; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #ffd700; }
+        label { display: block; margin-top: 8px; font-weight: bold; color: #ffd700; font-size: 0.8rem; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; }
+        .btn-file { background: #333; color: #ffd700; border: 1px solid #ffd700; padding: 12px; width: 100%; border-radius: 5px; text-align: center; font-size: 0.8rem; display: block; margin-top: 5px; font-weight: bold; cursor: pointer; }
+        .info-peso { font-size: 0.7rem; margin-top: 5px; font-weight: bold; }
+        .peso-ok { color: #00ff88; }
+        .peso-alerta { color: #ff4444; }
+        .preview { height: 60px; margin-top: 10px; border-radius: 5px; display: none; border: 1px solid #444; }
+        
         .tramo-card { background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; position: relative; }
-        .btn-eliminar { color: #ff4d4d; background: none; border: none; font-size: 0.7rem; cursor: pointer; float: right; }
-        pre { background: #000; padding: 15px; border: 1px solid #ffd700; font-size: 0.8rem; overflow-x: auto; color: #00ff88; border-radius: 5px; }
+        .btn-remove { position: absolute; top: 5px; right: 5px; color: #ff4444; background: none; border: none; font-weight: bold; cursor: pointer; }
+        .row { display: flex; gap: 8px; margin-bottom: 5px; }
+        .btn-plus { background: #238636; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        
+        .btn-generar { background: #ffd700; color: black; border: none; padding: 20px; width: 100%; font-weight: bold; border-radius: 5px; margin-top: 20px; font-size: 1rem; cursor: pointer; }
+        .btn-copiar { background: #007bff; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        
+        pre { background: #000; padding: 15px; border: 1px solid #ffd700; font-size: 0.7rem; overflow-x: auto; color: #00ff88; border-radius: 5px; white-space: pre-wrap; word-break: break-all; margin-top: 15px; }
         input[type="file"] { display: none; }
-        .row { display: flex; gap: 5px; margin-bottom: 5px; }
-        .row input { flex: 1; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <h1>🚀 Consola de Fabricación V2.2</h1>
+    <h1>🚀 Constructor Satelital V3.1</h1>
 
     <div class="bloque">
-        <label>Cargar configuración existente</label>
-        <button class="btn-cargar" onclick="document.getElementById('file-input').click()">📂 SELECCIONAR CONFIG.JSON</button>
-        <input type="file" id="file-input" accept=".json" onchange="cargarJSON(event)">
+        <label>Identidad Visual (Base64)</label>
+        <label for="file-logo" class="btn-file">📸 LOGO PERFIL</label>
+        <input type="file" id="file-logo" accept="image/*" onchange="procesarImg(this, 'prev-logo', 'data-logo', 'p-logo')">
+        <div id="p-logo" class="info-peso"></div>
+        <img id="prev-logo" class="preview">
+        <input type="hidden" id="data-logo">
+
+        <label for="file-banner" class="btn-file" style="margin-top:15px;">🖼️ BANNER FONDO</label>
+        <input type="file" id="file-banner" accept="image/*" onchange="procesarImg(this, 'prev-banner', 'data-banner', 'p-banner')">
+        <div id="p-banner" class="info-peso"></div>
+        <img id="prev-banner" class="preview">
+        <input type="hidden" id="data-banner">
     </div>
 
     <div class="bloque">
-        <label>Identidad Visual y Contenido</label>
-        <input type="text" id="nombre" placeholder="Nombre de la Marca">
-        <input type="color" id="color" value="#ffd700" style="height: 40px;">
-        <input type="text" id="logo" placeholder="URL del Logo (1x1)">
-        <input type="text" id="banner" placeholder="URL del Banner (Horizontal)">
-        <textarea id="bio" maxlength="400" placeholder="Horarios y descripción (Máx 400 car.)" rows="3"></textarea>
+        <label>Textos y Marca</label>
+        <input type="text" id="nombre" placeholder="Nombre del Profesional">
+        <input type="color" id="color" value="#ffd700" style="height:45px;">
+        <textarea id="bio" placeholder="Bio y especialidad..." rows="2"></textarea>
     </div>
 
     <div class="bloque">
-        <label>Estrategia y Acceso Oculto</label>
-        <input type="number" id="tanque" placeholder="Tanque de Tiempo Diario (Minutos)">
-        <input type="text" id="idSala" placeholder="ID de la Sala (Jitsi)">
-        <input type="text" id="pin" placeholder="PIN de Seguridad (4 dígitos)">
-        <input type="text" id="wa_dueno" placeholder="WhatsApp Dueño">
-        <input type="text" id="wa_colab" placeholder="WhatsApp Colaborador">
+        <label>Logística y Seguridad</label>
+        <div class="row">
+            <input type="number" id="tanque" placeholder="Minutos Tanque">
+            <input type="text" id="pin" placeholder="PIN Dueño (Ej: 1234)">
+        </div>
+        <input type="text" id="idSala" placeholder="ID de Jitsi (Ej: sala-marcos-123)">
+        <input type="text" id="wa_colab" placeholder="WhatsApp Colab (549...)">
     </div>
 
     <div class="bloque">
-        <label>Configuración de Tramos y Pasarelas</label>
-        <div id="contenedor-tramos"></div>
-        <button type="button" class="btn-plus" onclick="agregarTramo()">➕ AGREGAR TRAMO (PRODUCTO)</button>
+        <label>Productos y Tramos</label>
+        <div id="lista-tramos"></div>
+        <button class="btn-plus" onclick="addTramo()">➕ AÑADIR PRODUCTO</button>
     </div>
 
-    <button class="btn-generar" onclick="generarJSON()">GENERAR ADN PARA GITHUB</button>
+    <button class="btn-generar" onclick="generar()">GENERAR ADN FINAL</button>
 
-    <div id="resultado" style="display:none; margin-top: 20px;">
-        <label style="color: #00ff88;">✓ ADN Generado. Copiá esto en config.json:</label>
-        <pre id="codigo-json"></pre>
+    <div id="res" style="display:none; padding-bottom: 40px;">
+        <button class="btn-copiar" onclick="copiarJSON()">📋 COPIAR ADN AL PORTAPAPELES</button>
+        <pre id="json-output"></pre>
     </div>
 
     <script>
-        function agregarTramo(datos = {}) {
-            const contenedor = document.getElementById('contenedor-tramos');
-            const div = document.createElement('div');
-            div.className = 'tramo-card';
-            
-            const min = datos.min || '';
-            const precio = datos.precio || '';
-            const mp = datos.mp || '';
-            const gpay = datos.gpay || datos.gp || '';
-            const paypal = datos.paypal || datos.pp || '';
-            const stripe = datos.stripe || datos.st || '';
-
-            div.innerHTML = `
-                <button class="btn-eliminar" onclick="this.parentElement.remove()">[x] ELIMINAR</button>
-                <div class="row">
-                    <input type="number" class="t-min" placeholder="Minutos" value="${min}">
-                    <input type="text" class="t-precio" placeholder="Precio $" value="${precio}">
-                </div>
-                <input type="text" class="t-mp" placeholder="Link Mercado Pago" value="${mp}">
-                <div class="row">
-                    <input type="text" class="t-gp" placeholder="GPay" value="${gpay}">
-                    <input type="text" class="t-pp" placeholder="PayPal" value="${paypal}">
-                    <input type="text" class="t-st" placeholder="Stripe" value="${stripe}">
-                </div>
-            `;
-            contenedor.appendChild(div);
+        function procesarImg(input, prev, hide, peso) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            if (file) {
+                const kb = (file.size/1024).toFixed(1);
+                const info = document.getElementById(peso);
+                info.innerHTML = kb > 400 ? `⚠️ ${kb}KB (Pesado)` : `✅ ${kb}KB (OK)`;
+                info.className = kb > 400 ? "info-peso peso-alerta" : "info-peso peso-ok";
+                
+                reader.onloadend = () => {
+                    document.getElementById(prev).src = reader.result;
+                    document.getElementById(prev).style.display = "block";
+                    document.getElementById(hide).value = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
-        function generarJSON() {
-            const tramosDOM = document.querySelectorAll('.tramo-card');
-            const tramosData = Array.from(tramosDOM).map(t => ({
-                min: t.querySelector('.t-min').value,
-                precio: t.querySelector('.t-precio').value,
-                mp: t.querySelector('.t-mp').value,
-                gpay: t.querySelector('.t-gp').value,
-                paypal: t.querySelector('.t-pp').value,
-                stripe: t.querySelector('.t-st').value
+        function addTramo(d = {}) {
+            const container = document.getElementById('lista-tramos');
+            const div = document.createElement('div');
+            div.className = 'tramo-card';
+            div.innerHTML = `
+                <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+                <div class="row">
+                    <input type="number" class="t-min" placeholder="Minutos" value="${d.min||''}">
+                    <input type="text" class="t-pre" placeholder="Precio $" value="${d.precio||''}">
+                </div>
+                <input type="text" class="t-mp" placeholder="Link Mercado Pago" value="${d.mp||''}">
+            `;
+            container.appendChild(div);
+        }
+
+        function generar() {
+            // Validamos campos mínimos
+            const pin = document.getElementById('pin').value;
+            if(!pin) { alert("Por favor, define un PIN de seguridad"); return; }
+
+            const tramos = Array.from(document.querySelectorAll('.tramo-card')).map(t => ({
+                min: parseInt(t.querySelector('.t-min').value) || 0,
+                precio: t.querySelector('.t-pre').value || "0",
+                mp: t.querySelector('.t-mp').value || "#"
             }));
 
-            const config = {
-                nombreMarca: document.getElementById('nombre').value,
+            const data = {
+                nombreMarca: document.getElementById('nombre').value || "Sin Nombre",
                 colorMarca: document.getElementById('color').value,
-                logoUrl: document.getElementById('logo').value,
-                bannerUrl: document.getElementById('banner').value,
+                logoUrl: document.getElementById('data-logo').value,
+                bannerUrl: document.getElementById('data-banner').value,
                 bioTexto: document.getElementById('bio').value,
                 tanqueMinutos: parseInt(document.getElementById('tanque').value) || 0,
-                idSala: document.getElementById('idSala').value,
-                pinSeguridad: document.getElementById('pin').value,
-                whatsappDueno: document.getElementById('wa_dueno').value,
+                idSala: document.getElementById('idSala').value || "sala-predeterminada",
+                pinSeguridad: pin,
                 whatsappColaborador: document.getElementById('wa_colab').value,
-                tramos: tramosData
+                tramos: tramos
             };
-            document.getElementById('codigo-json').innerText = JSON.stringify(config, null, 2);
-            document.getElementById('resultado').style.display = 'block';
+
+            const jsonStr = JSON.stringify(data, null, 2);
+            document.getElementById('json-output').innerText = jsonStr;
+            document.getElementById('res').style.display = 'block';
             window.scrollTo(0, document.body.scrollHeight);
         }
 
-        function cargarJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const config = JSON.parse(e.target.result);
-                    document.getElementById('nombre').value = config.nombreMarca || '';
-                    document.getElementById('color').value = config.colorMarca || '#ffd700';
-                    document.getElementById('logo').value = config.logoUrl || '';
-                    document.getElementById('banner').value = config.bannerUrl || '';
-                    document.getElementById('bio').value = config.bioTexto || '';
-                    document.getElementById('tanque').value = config.tanqueMinutos || 0;
-                    document.getElementById('idSala').value = config.idSala || '';
-                    document.getElementById('pin').value = config.pinSeguridad || '';
-                    document.getElementById('wa_dueno').value = config.whatsappDueno || '';
-                    document.getElementById('wa_colab').value = config.whatsappColaborador || '';
-                    
-                    document.getElementById('contenedor-tramos').innerHTML = '';
-                    if (config.tramos && Array.isArray(config.tramos)) {
-                        config.tramos.forEach(t => agregarTramo(t));
-                    }
-                    alert("✓ ADN Cargado con éxito");
-                } catch (err) {
-                    alert("Error al leer el archivo JSON");
-                }
-            };
-            reader.readAsText(file);
+        function copiarJSON() {
+            const texto = document.getElementById('json-output').innerText;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("¡ADN copiado! Pégalo en tu archivo config.json");
+            });
         }
+        
+        // Iniciar con un tramo por defecto
+        addTramo({min: "15", precio: "2500"});
     </script>
 </body>
-</html>
+        </html>
+        
